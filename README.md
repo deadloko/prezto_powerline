@@ -6,9 +6,8 @@ Powerline for [Prezto](http://github.com/sorin-ionescu/prezto) ZSH
 * Single line prompt
 * Git branch info (current branch and modified states)
 * Time since last commit
-* RVM current ruby version / gemset
 
-![Example](https://raw.github.com/davidjrice/prezto_powerline/master/prompt.png)
+![Example](https://raw.github.com/deadloko/prezto_powerline/master/prompt.png)
 
 ## Dependencies
 
@@ -52,9 +51,5 @@ This prompt is inspired by:
 * [robbl oh-my-zsh theme](http://github.com/robbl/oh-my-zsh-config)
 * [SKWP prezto theme](http://github.com/skwp/dotfiles/blob/master/zsh/prezto-themes/prompt_skwp_setup)
 
-## TODO
-
-* Moar configurable
-* Extract functions to Prezto modules?
-* Use better Prezto best practices...?
-* Handle NVM version info?
+This prompt was created by:
+* [David Rice](https://github.com/davidjrice/prezto_powerline)
