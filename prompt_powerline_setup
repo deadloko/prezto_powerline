@@ -15,19 +15,19 @@ ZSH_THEME_REP_TIME_SINCE_COMMIT_LONG="%{$fg[red]%}"
 ZSH_THEME_REP_TIME_SINCE_COMMIT_NEUTRAL="%{$fg[cyan]%}"
 
 # returns the time since last git commit
-git_time_details()() {
+function git_time_details() {
   # only proceed if there is actually a git repository
-  if $(git rev-parse --git-dir > /dev/null 2>&1); then
+  if `git rev-parse --git-dir > /dev/null 2>&1`; then
     # only proceed if there is actually a commit
     if [[ $(git log 2>&1 > /dev/null | grep -c "^fatal: bad default revision") == 0 ]]; then
       # get the last commit hash
-      # lc_hash=$(git log --pretty=format:'%h' -1 2> /dev/null)
+      # lc_hash=`git log --pretty=format:'%h' -1 2> /dev/null`
       # get the last commit time
-      lc_time=$(git log --pretty=format:'%at' -1 2> /dev/null)
+      lc_time=`git log --pretty=format:'%at' -1 2> /dev/null`
 
-      now=$(date +%s)
+      now=`date +%s`
       seconds_since_last_commit=$((now-lc_time))
-      lc_time_since=$(time_since_commit $seconds_since_last_commit)
+      lc_time_since=`time_since_commit $seconds_since_last_commit`
 
       echo "$lc_time_since"
     else
@@ -39,7 +39,7 @@ git_time_details()() {
 }
 
 # returns the time by given seconds
-time_since_commit()() {
+function time_since_commit() {
   seconds_since_last_commit=$(($1 + 0))
 
   # totals
@@ -60,7 +60,23 @@ time_since_commit()() {
   fi
 }
 
-rvm_info_for_prompt() {
+function user_info_for_prompt {
+  if [[ `which whoami` != "whoami not found" ]]; then
+    whoami
+  else
+    echo ""
+  fi
+}
+
+function date_info_for_prompt {
+  if [[ `which date` != "date not found" ]]; then
+    date 
+  else
+    echo ""
+  fi
+}
+
+function rvm_info_for_prompt {
   if [[ -d ~/.rvm/ ]]; then
     local ruby_version=$(~/.rvm/bin/rvm-prompt)
     if [ -n "$ruby_version" ]; then
@@ -71,7 +87,7 @@ rvm_info_for_prompt() {
   fi
 }
 
-prompt_powerline_precmd() {
+function prompt_powerline_precmd {
   # Check for untracked files or updated submodules since vcs_info doesn't.
   if [[ ! -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
     fmt_branch="%b%u%c${__PROMPT_SKWP_COLORS[4]}●%f"
@@ -86,7 +102,7 @@ prompt_powerline_precmd() {
   # zstyle ':prezto:module:ruby' rvm '%r'
 }
 
-prompt_powerline_setup() {
+function prompt_powerline_setup {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
   prompt_opts=(cr percent subst)
@@ -166,17 +182,19 @@ prompt_powerline_setup() {
   POWERLINE_COLOR_FG_LIGHT_GRAY=%F{240}
   POWERLINE_COLOR_FG_WHITE=%F{255}
 
-  POWERLINE_SEPARATOR=$'\uE0B0'
-  POWERLINE_R_SEPARATOR=$'\uE0B2'
+  POWERLINE_SEPARATOR=$'\u2b80'
+  POWERLINE_R_SEPARATOR=$'\u2b82'
 
   POWERLINE_LEFT_A="%K{green}%F{white} %~ %k%f%F{green}%K{blue}"$POWERLINE_SEPARATOR
   POWERLINE_LEFT_B="%k%f%F{white}%K{blue} "'${vcs_info_msg_0_}'" %k%f%F{blue}%K{black}"$POWERLINE_SEPARATOR
   POWERLINE_LEFT_C=" %k%f%F{white}%K{black}"'$(git_time_details)'" %k%f%F{black}"$POWERLINE_SEPARATOR"%f "
+  POWERLINE_RIGHT_A="%k%f%F{black}%K{white}"$POWERLINE_R_SEPARATOR"%f""%k%f%F{white}%K{black} "'$(date_info_for_prompt)'
+  POWERLINE_RIGHT_B="%k%f%F{white}"$POWERLINE_R_SEPARATOR"%f""%k%f%F{black}%K{white} "'$(user_info_for_prompt)'
 
   PROMPT=$POWERLINE_LEFT_A$POWERLINE_LEFT_B$POWERLINE_LEFT_C
   # RPROMPT=$POWERLINE_COLOR_FG_WHITE$POWERLINE_R_SEPARATOR"%f$POWERLINE_COLOR_BG_WHITE $POWERLINE_COLOR_FG_GRAY$powerline_right_b "$POWERLINE_R_SEPARATOR"%f%k$POWERLINE_COLOR_BG_GRAY$POWERLINE_COLOR_FG_WHITE $powerline_right_a %f%k"
   # RPROMPT=$POWERLINE_COLOR_FG_WHITE$POWERLINE_R_SEPARATOR"%f$POWERLINE_COLOR_BG_WHITE $POWERLINE_COLOR_FG_GRAY"'$powerline_right_b'" "$POWERLINE_R_SEPARATOR"%f%k$POWERLINE_COLOR_BG_GRAY$POWERLINE_COLOR_FG_WHITE "'$powerline_right_a'" %f%k"
-  RPROMPT=$POWERLINE_COLOR_FG_WHITE$POWERLINE_R_SEPARATOR"%f$POWERLINE_COLOR_BG_WHITE $POWERLINE_COLOR_FG_GRAY"'$(rvm_info_for_prompt)'" "
+  RPROMPT=$POWERLINE_RIGHT_B$POWERLINE_RIGHT_A
 }
 
 prompt_powerline_setup "$@"
