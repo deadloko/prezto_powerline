@@ -188,7 +188,7 @@ function prompt_powerline_setup {
   POWERLINE_LEFT_A="%K{green}%F{white} %~ %k%f%F{green}%K{blue}"$POWERLINE_SEPARATOR
   POWERLINE_LEFT_B="%k%f%F{white}%K{blue} "'${vcs_info_msg_0_}'" %k%f%F{blue}%K{black}"$POWERLINE_SEPARATOR
   POWERLINE_LEFT_C=" %k%f%F{white}%K{black}"'$(git_time_details)'" %k%f%F{black}"$POWERLINE_SEPARATOR"%f "
-  POWERLINE_RIGHT_A="%k%f%F{black}%K{white}"$POWERLINE_R_SEPARATOR"%f""%k%f%F{white}%K{black} "'$(date_info_for_prompt)'
+  POWERLINE_RIGHT_A="%k%f%F{black}%K{white} "$POWERLINE_R_SEPARATOR"%f""%k%f%F{white}%K{black} "'$(date_info_for_prompt)'
   POWERLINE_RIGHT_B="%k%f%F{white}"$POWERLINE_R_SEPARATOR"%f""%k%f%F{black}%K{white} "'$(user_info_for_prompt)'
 
   PROMPT=$POWERLINE_LEFT_A$POWERLINE_LEFT_B$POWERLINE_LEFT_C
